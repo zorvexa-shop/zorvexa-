@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="bn"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="ZORVEXA – Fashion & Lifestyle shop. Order online, Cash on Delivery across Bangladesh.">
 <title>ZORVEXA – Fashion &amp; Lifestyle</title>
 <style>
 :root{--bg:#fff;--fg:#111;--card:#f4f4f4;--gold:#c9a24b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -53,6 +54,7 @@ const DP=[
 {id:'a2',e:'👗',n:'Evening Dress',bn:'ইভনিং ড্রেস',c:1,pr:3500,sp:0,st:8,d:'Elegant evening dress.'},
 {id:'a3',e:'⌚',n:'Classic Gold Watch',bn:'ক্লাসিক গোল্ড ঘড়ি',c:4,pr:12000,sp:8900,st:10,d:'Stainless steel, 5ATM.'},
 {id:'a4',e:'🕶️',n:'Aviator Sunglasses',bn:'এভিয়েটর সানগ্লাস',c:5,pr:4500,sp:3200,st:0,d:'UV400 lenses.'}];
+const SHOP_WA='8801714448956';
 let S={bn:true,tab:'home',cat:-1,q:'',view:null,cart:{},orders:[],products:DP,cats:DC,phone:'',delivery:80,pin:'',admin:false,atab:'p',edit:null};
 try{const d=JSON.parse(localStorage.getItem('zorvexa')||'{}');Object.assign(S,d)}catch(e){}
 S.admin=false;S.view=null;S.tab='home';S.edit=null;let IMG='';
@@ -88,10 +90,12 @@ function place(){const v=[0,1,2,3,4].map(i=>document.getElementById('f'+i).value
 if(v.slice(0,4).some(x=>!x)||!Object.keys(S.cart).length){alert(t('req'));return}
 const id='ORD-'+Date.now().toString(36).toUpperCase();
 S.orders.unshift({id,total:total(),s:0,name:v[0],phone:v[1],addr:v[2],dist:v[3],note:v[4],items:Object.entries(S.cart).map(([i,q])=>q+'× '+(by(i)?by(i).n:i)).join(', ')});
-S.cart={};save();alert(t('ok')+'\n'+id);go({tab:'orders'})}
+const o=S.orders[0];const msg='🛍️ নতুন অর্ডার / New Order — ZORVEXA\n'+'ID: '+o.id+'\n'+'👤 '+o.name+'\n📞 '+o.phone+'\n📍 '+o.addr+', '+o.dist+'\n🛒 '+o.items+(o.note?'\n📝 '+o.note:'')+'\n💰 Total: ৳'+o.total+' (Cash on Delivery)';
+S.cart={};save();alert(t('ok')+'\n'+id);go({tab:'orders'});
+const wa='https://wa.me/'+SHOP_WA+'?text='+encodeURIComponent(msg);if(!window.open(wa,'_blank'))location.href=wa}
 function orders(){if(!S.orders.length)return `<div class="empty">${t('empty')}</div>`;
 return `<div class="sec">${S.orders.map(o=>`<div class="row"><div><b>${o.id}</b><br>${tk(o.total)}</div><div class="p">${ST[o.s][S.bn?1:0]}</div></div>`).join('')}</div>`}
-function me(){const n=S.phone.replace(/\D/g,'');
+function me(){if(!S.phone)S.phone='+'+SHOP_WA;const n=S.phone.replace(/\D/g,'');
 return `<div class="sec" style="text-align:center"><img class="logo" src="${LOGO}" alt="ZORVEXA"><h2 style="letter-spacing:5px;margin:0">ZORVEXA</h2><div class="small">FASHION &amp; LIFESTYLE · Wear Your Vibe</div>
 <div class="box">${n?`<b>📞 ${esc(S.phone)}</b><a class="btn" href="tel:${n}">${t('call')}</a><a class="btn o" href="https://wa.me/${n}" target="_blank" rel="noopener">${t('wa')}</a>`:t('nonum')}</div>
 <button class="btn o" onclick="go({tab:'admin'})">🔒 ${t('admin')}</button></div>`}
